@@ -19,9 +19,9 @@
 
 2.魅族应用中心联运 SDK 目前不要求登录魅族账号，亦不要求魅族手机。
 
-3.您的项目需要[添加 Kotlin 支持](https://developer.android.com/studio/projects/add-kotlin)。过程非常简单，也可以使用 Andriod Studio -> Tools -> Kotlin -> Configure Kotlin in project，Android Studio 会自动帮助项目添加依赖插件。请放心，这不会影响现有项目以及 APK 大小，如果您还不熟悉 `Kotlin`，可以继续使用 `Java` 编写代码。但不管用何种语言开发，该插件必须添加以顺利通过编译
+3.您的项目需要[添加 Kotlin 支持](https://developer.android.com/studio/projects/add-kotlin)。过程非常简单，也可以使用 Andriod Studio -> Tools -> Kotlin -> Configure Kotlin in project，Android Studio 会自动帮助项目添加依赖插件。请放心，这不会影响现有项目以及 APK 大小，如果您还不熟悉 `Kotlin`，可以继续使用 `Java` 编写代码。但不管用何种语言开发，该插件必须添加以顺利通过编译。
 
-4.【重要】因为联运 SDK 自身已经包含了支付宝、微信、银联渠道的支付 SDK，如果您的项目之前单独接入了这些支付方式或其它类型的支付 SDK，请先将它们**移除以免编译时提示冲突**
+4.【重要】因为联运 SDK 自身已经包含了支付宝、微信、银联渠道的支付 SDK，如果您的项目之前单独接入了这些支付方式或其它类型的支付 SDK，请先将它们**移除以免编译时提示冲突**。
 
 
 # 时序图
@@ -111,9 +111,8 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
                 //太好了，用户终于授权了，调用 SDK 接口发起支付请求
                 MzAppCenterPlatform.getInstance()?.pay(activity, payInfo, listener)
             } else {
-         tools:ignore="NewApi">trueoid.Manifest.permission.READ_PHONE_STATE”权限，无法完成支付
-         tools:ignore="NewApi">true
-       } tools:ignore="NewApi">true
+                //用户不授予“android.Manifest.permission.READ_PHONE_STATE”权限，无法完成支付
+            }
        else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
    }
 }
