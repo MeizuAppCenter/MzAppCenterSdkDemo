@@ -11,7 +11,7 @@
 
 1.在接入前，您需要按照[《应用联运服务接入指南》](http://open-wiki.flyme.cn/doc-wiki/index#id?119)完成`新建联运版本`的工作。
 
-2.在`新建联运版本`时，您需要提供您应用**生产环境（最终上架版本）**的签名信息，请访问[《应用联运SDK接入说明》](http://open-wiki.flyme.cn/doc-wiki/index#id?118)，使用文档中提到的 `MzSignfetcher` 工具获取它。
+2.在`新建联运版本`时，您需要提供您应用**最终上架的生产环境版本**的签名信息，请访问[《应用联运SDK接入说明》](http://open-wiki.flyme.cn/doc-wiki/index#id?118)，使用文档中提到的 `MzSignfetcher` 工具获取它。
 
 # 技术准备
 
@@ -111,9 +111,9 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
                 //太好了，用户终于授权了，调用 SDK 接口发起支付请求
                 MzAppCenterPlatform.getInstance()?.pay(activity, payInfo, listener)
             } else {
-                //用户不授予“android.Manifest.permission.READ_PHONE_STATE”权限，无法完成支付
-            }
-       }
+         tools:ignore="NewApi">trueoid.Manifest.permission.READ_PHONE_STATE”权限，无法完成支付
+         tools:ignore="NewApi">true
+       } tools:ignore="NewApi">true
        else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
    }
 }
@@ -129,18 +129,18 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
 
 `PayInfo` 为支付信息，包含订单标题、扣款金额等信息，由您构造后传入，具体说明如下：
 
-| 参数名 | 类型 | 是否必填 | 说明 |
-| ------ | ------ | ------ | ------ |
-| createTime | Long | 是 | cp订单创建时间 |
-| tradeNo | String | 是 | cp订单号 |
-| productId | String | 是 | 商品ID |
-| productName | String | 是 | 商品名称 |
-| productBody | String | 是 | 商品详情 |
-| productUnit | String | 是 | 商品单位 |
-| buyAmount | Integer | 是 | 购买数量 |
-| perPrice | Double | 是 | 商品单价 |
-| totalFee | Double | 是 | 购买总价 |
-| attach | String | 否 | CP自定义信息 |
+| 参数名 | 类型 | 是否必填 | 说明 | 示例参数 |
+| ------ | ------ | ------ | ------ |------ |
+| createTime | Long | 是 | cp订单创建时间 | System.currentTimeMillis() |
+| tradeNo | String | 是 | cp订单号 | "tradeNo" |
+| productId | String | 是 | 商品ID | "productId"|
+| productName | String | 是 | 商品名称 |  "productName" |
+| productBody | String | 是 | 商品详情 | "productBody" |
+| productUnit | String | 是 | 商品单位 | "份" |
+| buyAmount | Integer | 是 | 购买数量 | 1 |
+| perPrice | Double | 是 | 商品单价 | 0.01 |
+| totalFee | Double | 是 | 购买总价 | 0.01 |
+| attach | String | 否 | CP自定义信息 | “” |
 
 `IPayResultListener` 为支付结果回调，具体说明如下：
 ``` kotlin
@@ -163,6 +163,7 @@ override fun onFailed(code: Int, message: String) {
 | -5 | 无法读取手机状态信息 | SDK 在处理支付请求时需要获取手机 IMEI 等信息，[引导用户授予][4] `android.permission.READ_PHONE_STATE` 权限|
 | 其它 | 其它未知错误 | 联系魅族技术支持 |
 
+**注意：`onSuccess()` 只代表用户本地支付成功，后台需要处理以及最终确认状态。因此您不应该在这个回调里做任何的发货操作，因为这不完全可靠。请务必以魅族服务器回调您的支付通知 URL为准，来认为用户最终支付成功。详见上方的时序图。**
 
 ### ProGuard
 1.请先确保您的应用已经引用了 [Android SDK 默认的混淆规则](https://developer.android.com/studio/build/shrink-code#shrink-code)，这也是 Android 开发规范：
@@ -173,13 +174,14 @@ override fun onFailed(code: Int, message: String) {
 
 # 常见问题
 
-* 编译报错`uses-sdk:minSdkVersion 14 cannot be smaller than version 19 declared in library [:MzAppCenterSdk_1.0.0(Build_201808301651):]`
-
-  * 解决方法：请查看 `MzAppCenterSdk_X.X.X`后面的版本号，确保接入 `1.0.1` 或以上版本。
-
 * 运行报错`java.lang.NoClassDefFoundError:Failed resolution of: Lkotlin/jvm/internal/Intrinsics`
 
-  * 解决方法：请确保编译时添加了 `Kotlin` 插件，请参考[第一节《环境准备》中第 2 点描述](#环境准备)。
+  * 解决方法：请确保编译时添加了 `Kotlin` 插件。
+
+* 运行报错 `IndPayActivity crash，setOrientation() 方法报错`
+
+  * 解决方法：请不要在 Android 8.0 版本运行此程序。
+
 
 * 运行报错 `IndPayActivity crash, you need to use a theme.appcompat theme (or descendant) with this activity. material`
 
@@ -226,6 +228,14 @@ override fun onFailed(code: Int, message: String) {
 * 运行时界面显示为中文
 
   * 解决方法：检查您 `app` 模块的 `build.gradle`，移除 `resConfigs` 相关的配置。
+
+* Payinfo 的 `totalFee` 已经变了，收银台显示的价格却还是原来的
+
+  * 解决方法：我们的订单体系，一旦订单生成等待用户支付，价格是不允许再变化的。因此如果价格发生了变动，您需要重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法。
+
+* 老的订单重试支付一直失败
+
+  * 您在我们订单体系内的`预付单`可能过期了。请尝试重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法。关于`预付单`的解释请参见上方时序图。
 
 
   [1]: https://github.com/MeizuAppCenter/MzAppCenterSdkDemo/releases
