@@ -139,7 +139,7 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
 | buyAmount | Integer | 是 | 购买数量 | 1 |
 | perPrice | Double | 是 | 商品单价 | 0.01 |
 | totalFee | Double | 是 | 购买总价 | 0.01 |
-| attach | String | 否 | CP自定义信息 | “” |
+| attach | String | 否 | CP自定义信息 | "" |
 
 `IPayResultListener` 为支付结果回调，具体说明如下：
 ``` kotlin
@@ -164,7 +164,7 @@ override fun onFailed(code: Int, message: String) {
 
 **注意：`onSuccess()` 只代表用户本地支付成功，后台需要处理以及最终确认状态。因此您不应该在这个回调里做任何的发货操作，因为这不完全可靠。请务必以魅族服务器回调您的支付通知 URL为准，来认为用户最终支付成功。详见上方的时序图。**
 
-### ProGuard
+## ProGuard
 1.请先确保您的应用已经引用了 [Android SDK 默认的混淆规则](https://developer.android.com/studio/build/shrink-code#shrink-code)，这也是 Android 开发规范：
 ``` proguard
     proguardFiles getDefaultProguardFile('proguard-android.txt')
@@ -189,7 +189,7 @@ override fun onFailed(code: Int, message: String) {
     检查 `AndroidManifestx.xml` 的 `Applicaiton`节点，确保声明了 `android:theme="@style/AppTheme"`,并且 `AppTheme` 继承自 `Theme.Appcompat`，比如 `<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">`。可以通过新建一个全新的 AS 工程，或者参考[官方文档](https://developer.android.com/guide/topics/ui/look-and-feel/themes#Theme)来规范您的工程结构。
   
   * 方法二（侵入式，不推荐）
-    1. 打开您 app 模块的 `res/values/styles.xml`，添加如下声明：
+    1. 打开您 `app` 模块的 `res/values/styles.xml`，添加如下声明：
 
     ```xml
 
@@ -224,17 +224,17 @@ override fun onFailed(code: Int, message: String) {
 
   * 解决方法：您的项目是否已经接入了`支付宝 SDK` 或有其它 SDK 引用了这些库？请使用 `gradle` 尝试 `exclude{}` 掉它们或移除。
 
-* 运行时界面显示为中文
+* 运行时界面显示为英文
 
   * 解决方法：检查您 `app` 模块的 `build.gradle`，移除 `resConfigs` 相关的配置。
 
-* Payinfo 的 `totalFee` 已经变了，收银台显示的价格却还是原来的
+* `Payinfo` 的 `totalFee` 已经变了，拉起的收银台显示价格却还是原来的
 
-  * 解决方法：我们的订单体系，一旦订单生成等待用户支付，价格是不允许再变化的。因此如果价格发生了变动，您需要重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法。
+  * 解决方法：我们的订单体系，一旦订单生成等待用户支付，价格是不允许再变化的。因此如果价格发生了变动，您需要重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法。同时请在自身订单系统内建立好对应关系方便后期对账。
 
 * 老的订单重试支付一直失败
 
-  * 您在我们订单体系内的`预付单`可能过期了。请尝试重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法。关于`预付单`的解释请参见上方时序图。
+  * 您在我们订单体系内的`预付单`可能过期了。请尝试重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法，同时请在自身订单系统内建立好对应关系方便后期对账。关于`预付单`的解释请参见上方时序图。
 
 
   [1]: https://github.com/MeizuAppCenter/MzAppCenterSdkDemo/releases
