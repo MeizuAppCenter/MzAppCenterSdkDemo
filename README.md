@@ -4,18 +4,35 @@
 特别注意：
 
  1. Demo 不支持在 Android 8.0 手机运行。但因 Flyme 系统没有 Android 8.0 的版本，因此您无需担心。
- 2. **Demo 中的 libs 不会随时保持更新，请不要直接拷贝使用！请不要直接拷贝使用！请不要直接拷贝使用！
-    要获取最新的 SDK，请转至[官方文档][1]查看。**
+ 2. **Demo 中的 libs 不会随时保持更新，请不要直接拷贝使用！请不要直接拷贝使用！请不要直接拷贝使用！**
+    请转至 [Release][1] 接入最新版本的 SDK。 
+
+# 环境准备
+
+1.在接入前，您需要按照[《应用联运服务接入指南》](http://open-wiki.flyme.cn/doc-wiki/index#id?119)完成`新建联运版本`的工作。
+
+2.在`新建联运版本`时，您需要提供您应用**生产环境（最终上架版本）**的签名信息，请访问[《应用联运SDK接入说明》](http://open-wiki.flyme.cn/doc-wiki/index#id?118)，使用文档中提到的 `MzSignfetcher` 工具获取它。
+
+# 技术准备
+
+1.魅族应用中心联运 SDK 目前只适用于 `Android Studio` 工程结构的项目。
+
+2.魅族应用中心联运 SDK 目前不要求登录魅族账号，亦不要求魅族手机。
+
+3.您的项目需要[添加 Kotlin 支持](https://developer.android.com/studio/projects/add-kotlin)。过程非常简单，也可以使用 Andriod Studio -> Tools -> Kotlin -> Configure Kotlin in project，Android Studio 会自动帮助项目添加依赖插件。请放心，这不会影响现有项目以及 APK 大小，如果您还不熟悉 `Kotlin`，可以继续使用 `Java` 编写代码。但不管用何种语言开发，该插件必须添加以顺利通过编译
+
+4.【重要】因为联运 SDK 自身已经包含了支付宝、微信、银联渠道的支付 SDK，如果您的项目之前单独接入了这些支付方式或其它类型的支付 SDK，请先将它们**移除以免编译时提示冲突**
+
 
 # 时序图
 
 ![](static/Timing_diagram.png)
 
-# SDK 下载
+# 下载 SDK 与 视觉资源
 
 [下载地址][1]
 
-# 接入说明
+# 开始接入
 
 1.在项目 `app` 模块下新建 `libs/meizu` 目录，将下述文件拷贝至该目录
 
@@ -156,57 +173,60 @@ override fun onFailed(code: Int, message: String) {
 
 # 常见问题
 
-> 编译报错`uses-sdk:minSdkVersion 14 cannot be smaller than version 19 declared in library [:MzAppCenterSdk_1.0.0(Build_201808301651):]`
+* 编译报错`uses-sdk:minSdkVersion 14 cannot be smaller than version 19 declared in library [:MzAppCenterSdk_1.0.0(Build_201808301651):]`
 
-解决办法：请查看 `MzAppCenterSdk_X.X.X`后面的版本号，确保接入 `1.0.1` 或以上版本。
+  * 解决方法：请查看 `MzAppCenterSdk_X.X.X`后面的版本号，确保接入 `1.0.1` 或以上版本。
 
-> 运行报错`java.lang.NoClassDefFoundError:Failed resolution of: Lkotlin/jvm/internal/Intrinsics`
+* 运行报错`java.lang.NoClassDefFoundError:Failed resolution of: Lkotlin/jvm/internal/Intrinsics`
 
-解决办法：请确保编译时添加了 `Kotlin` 插件，请参考[第一节《环境准备》中第 2 点描述](#环境准备)。
+  * 解决方法：请确保编译时添加了 `Kotlin` 插件，请参考[第一节《环境准备》中第 2 点描述](#环境准备)。
 
-> 运行报错`you need to use a theme.appcompat theme (or descendant) with this activity. material`
+* 运行报错 `IndPayActivity crash, you need to use a theme.appcompat theme (or descendant) with this activity. material`
 
-解决办法：
+  * 方法一（推荐）
 
-* 方法一（推荐）
+    检查 `AndroidManifestx.xml` 的 `Applicaiton`节点，确保声明了 `android:theme="@style/AppTheme"`,并且 `AppTheme` 继承自 `Theme.Appcompat`，比如 `<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">`。可以通过新建一个全新的 AS 工程，或者参考[官方文档](https://developer.android.com/guide/topics/ui/look-and-feel/themes#Theme)来规范您的工程结构。
+  
+  * 方法二（侵入式，不推荐）
+    1. 打开您 app 模块的 `res/values/styles.xml`，添加如下声明：
 
-检查 `AndroidManifestx.xml` 的 `Applicaiton`节点，确保声明了 `android:theme="@style/AppTheme"`,并且 `AppTheme` 继承自 `Theme.Appcompat`，比如 `<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">`。可以通过新建一个全新的 AS 工程，或者参考[官方文档](https://developer.android.com/guide/topics/ui/look-and-feel/themes#Theme)来规范您的工程结构。
+    ```xml
 
-* 方法二（侵入式，不推荐）
-1. 打开您 app 模块的 `res/values/styles.xml`，添加如下声明：
+        <style name="Theme.AppCompat.Translucent">
+            <item name="android:windowNoTitle">true</item>
+            <item name="android:windowBackground">@android:color/transparent</item>
+            <item name="android:colorBackgroundCacheHint">@null</item>
+            <item name="android:windowIsTranslucent">true</item>
+            <item name="android:windowAnimationStyle">@android:style/Animation</item>
+            <item name="android:windowContentOverlay">@null</item>
+            <item name="android:windowTranslucentStatus"</item>
+            <item name="android:actionBarStyle">@null</item>
+            <item name="android:backgroundDimEnabled">true</item>
+            <item name="android:backgroundDimAmount">0.6</item>
+        </style>
+    ```
 
-```xml
+    2. 打开您 app 模块的 `AndroidManifest.xml`，添加如下声明：
 
-    <style name="Theme.AppCompat.Translucent">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation</item>
-        <item name="android:windowContentOverlay">@null</item>
-        <item name="android:windowTranslucentStatus" tools:ignore="NewApi">true</item>
-        <item name="android:actionBarStyle">@null</item>
-        <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:backgroundDimAmount">0.6</item>
-    </style>
-```
+    ```xml
+    <activity
+                android:name="com.meizu.flyme.indpay.process.pay.activity.IndPayActivity"
+                android:theme="@style/Theme.AppCompat.Translucent"
+                tools:replace="android:theme" />
+    ```
 
-2. 打开您 app 模块的 `AndroidManifest.xml`，添加如下声明：
+* 编译时提示 `utdid` 库冲突
 
-```xml
-<activity
-            android:name="com.meizu.flyme.indpay.process.pay.activity.IndPayActivity"
-            android:theme="@style/Theme.AppCompat.Translucent"
-            tools:replace="android:theme" />
-```
+  * 解决方法：您的项目是否引用了`友盟统计 SDK` 或 `支付宝 SDK`？请删除其中一个 `utdid4all-X.X.X.jar`。
 
-> 编译时提示 `utdid` 库冲突
+* 编译时提示 `okhttp` 或 `okio` 等库冲突
 
-解决办法：您的项目是否引用了`友盟统计 SDK` 或 `支付宝 SDK`？请删除其中一个 `utdid4all-X.X.X.jar`。
+  * 解决方法：您的项目是否已经接入了`支付宝 SDK` 或有其它 SDK 引用了这些库？请使用 `gradle` 尝试 `exclude{}` 掉它们或移除。
 
-> 编译时提示 `okhttp` 或 `okio` 等库冲突
+* 运行时界面显示为中文
 
-解决办法：您的项目是否已经接入了`支付宝 SDK` 或有其它 SDK 引用了这些库？请使用 `gradle` 尝试 `exclude{}` 掉它们或移除。
+  * 解决方法：检查您 `app` 模块的 `build.gradle`，移除 `resConfigs` 相关的配置。
 
-  [1]: http://open-wiki.flyme.cn/doc-wiki/index#id?118
+
+  [1]: https://github.com/MeizuAppCenter/MzAppCenterSdkDemo/releases
   
