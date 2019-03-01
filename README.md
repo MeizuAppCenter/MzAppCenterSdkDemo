@@ -3,7 +3,7 @@
 
 特别注意：
 
- 1. Demo 不支持在 Android 8.0 手机运行。但因 Flyme 系统没有 Android 8.0 的版本，因此您无需担心。
+ 1. 如您在开发调试阶段使用非魅族手机，并且系统版本为 Android O，请确保其版本为 Android 8.1，Demo 暂不支持在 Android 8.0 运行。
  2. **Demo 中的 libs 不会随时保持更新，请不要直接拷贝使用！请不要直接拷贝使用！请不要直接拷贝使用！**
     请转至 [Release][1] 接入最新版本的 SDK。 
 
@@ -85,7 +85,7 @@ class DemoApplication : Application() {
 | 参数名 | 类型 | 是否必填 | 说明 |
 | ------ | ------ | ------ | ------ |
 | application | Application | 是 | 应用的 Application |
-| appKey | String | 是 | 您在魅族开放平台申请签约时，魅族提供给您的一串值 |
+| appKey | String | 是 | 您在魅族开放平台[签约](http://open-wiki.flyme.cn/doc-wiki/index#id?119)完成后，魅族提供给您的一串值 |
 | debug | Boolean | 否 | SDK 内部 Log 开关，建议传 `<您的应用包名>.BuildConfig.Debug` |
 
 4.调用接口发起支付请求：
@@ -241,7 +241,7 @@ override fun onFailed(code: Int, message: String) {
 
 * `Payinfo` 的 `totalFee` 已经变了，拉起的收银台显示价格却还是原来的
 
-  * 解决方法：我们的订单体系，一旦订单生成等待用户支付，价格是不允许再变化的。因此如果价格发生了变动，您需要重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法。同时请在自身订单系统内建立好对应关系方便后期对账。
+  * 解决方法：我们的订单体系，一旦`预付单`生成并且等待用户支付，价格是不允许再变化的。因此如果价格发生了变动，您需要重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法，同时请在自身订单系统内建立好对应关系方便后期对账。关于`预付单`的解释请参见上方时序图。
 
 * 老的订单重试支付一直失败
 
