@@ -5,7 +5,7 @@
 
  1. 如您在开发调试阶段使用非魅族手机，并且系统版本为 Android O，请确保其版本为 Android 8.1，Demo 暂不支持在 Android 8.0 运行。
  2. **Demo 中的 libs 不会随时保持更新，请不要直接拷贝使用！请不要直接拷贝使用！请不要直接拷贝使用！**
-    请转至 [Release][1] 接入最新版本的 SDK。 
+    请转至 [Release][1] 下载最新版本的 SDK。
 
 # 环境准备
 
@@ -34,15 +34,15 @@
 
 # 开始接入
 
-1.在项目 `app` 模块下新建 `libs/meizu` 目录，将下述文件拷贝至该目录
+1.在项目 `app` 模块下新建 `libs/meizu` 目录，将下述文件拷贝至该目录，其中 X 的以[Release][1] 下载到的最新版本为准。[Release][1] 下载最新版本的 SDK
 
- - colortheme-crimson-2.0.170614.aar
- - flyme-appcompat-2.0.170614.aar
- - IndPayProcess-release.aar
- - meizu-common-2.0.170614.aar
+ - colortheme-crimson-X.X.XXXXXX.aar
+ - flyme-appcompat-X.X.XXXXXX.aar
+ - IndPayProcess-release-X.X.X.aar
+ - meizu-common-X.X.XXXXXX.aar
  - MzAppCenterSdk_X.X.X(Build_X.X.X).aar
- - MzUsageStats-3.2.0.aar
- - res-meizu-common-2.0.170614.aar
+ - MzUsageStats-X.X.X.aar
+ - res-meizu-common-X.X.XXXXXX.aar
 
 2.打开 `app` 的 `build.gradle`，在根节点声明：
 
