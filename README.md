@@ -34,7 +34,7 @@
 
 # 开始接入
 
-1.在项目 `app` 模块下新建 `libs/meizu` 目录，将下述文件拷贝至该目录，其中 X 的以[Release][1] 下载到的最新版本为准。[Release][1] 下载最新版本的 SDK
+1.在项目 `app` 模块下新建 `libs/meizu` 目录，将下述文件拷贝至该目录，其中 `X` 以 [Release][1] 下载到的最新版本为准。
 
  - colortheme-crimson-X.X.XXXXXX.aar
  - flyme-appcompat-X.X.XXXXXX.aar
