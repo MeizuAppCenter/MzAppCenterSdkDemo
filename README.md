@@ -218,9 +218,9 @@ override fun onFailed(code: Int, message: String) {
 
 * 编译时提示 `utdid` 库冲突
 
-  * 解决方法：您的项目是否引用了`友盟统计 SDK` 或 `支付宝 SDK`？请删除其中一个 `utdid4all-X.X.X.jar`。
-  
-    参考：https://developer.umeng.com/docs/66632/detail/67131
+  * 请使用 [MzAppCenterSdk_1.0.3][1] 以上版本，该版本已经集成了 [剥离UTDID的支付宝SDK](https://alipay.open.taobao.com/doc2/detail.htm?treeId=54&articleId=104509&docType=1)
+
+  * 如果升级了最新版本的 SDK 仍不生效，请检查您的项目是否引用了`友盟统计 SDK` ？请删除其中的 `utdid4all-X.X.X.jar`。参考：https://developer.umeng.com/docs/66632/detail/67131
 
 * 引用了 `android-aspectjx` 导致支付宝闪退，提示 `java.lang.NoClassDefFoundError:Failed resolution of: Lcom/alipay/sdk/app/PayTask`
   * 解决方法：请参考如下方法将 `支付宝 SDK` 加入 `aspectjx` 的白名单：

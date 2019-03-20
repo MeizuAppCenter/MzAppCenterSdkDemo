@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private void invokeSdkToPay() {
         PayInfo payInfo = new PayInfo(System.currentTimeMillis(), "tradeNo" + System.currentTimeMillis(), "productId",
                 "productName", "productBody", "个", 1, 1.00, 1.00 ,"attach");
-        MzAppCenterPlatform.Companion.getInstance().pay(this, payInfo, new IPayResultListener() {
+        MzAppCenterPlatform.getInstance().pay(this, payInfo, new IPayResultListener() {
             @Override
             public void onSuccess() {
                 Toast.makeText(MainActivity.this, "onSuccess()", Toast.LENGTH_SHORT).show();

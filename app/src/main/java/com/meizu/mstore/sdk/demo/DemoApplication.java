@@ -9,6 +9,6 @@ public class DemoApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        MzAppCenterPlatform.Companion.init(this, "your_appKey", BuildConfig.DEBUG);
+        MzAppCenterPlatform.init(this, "your_appKey", BuildConfig.DEBUG);
     }
 }
