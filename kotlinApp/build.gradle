@@ -24,7 +24,7 @@ android {
 
 repositories {
     flatDir {
-        dirs 'libs/meizu'
+        dirs '../app/libs/meizu'
     }
 }
 
@@ -32,11 +32,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    def meizuLibs = project.file('libs/meizu')
-    meizuLibs.traverse(nameFilter: ~/.*\.aar/) { file ->
-        def name = file.getName().replace('.aar', '')
-        implementation(name: name, ext: 'aar')
-    }
+    implementation fileTree(dir: '../app/libs/meizu', include: ['*.aar'])
 
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation "com.google.code.gson:gson:2.5"
