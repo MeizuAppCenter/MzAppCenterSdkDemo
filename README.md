@@ -56,7 +56,6 @@ repositories {
 接着在 `dependencies{}` 闭包内添加如下声明：
 ``` groovy
 implementation fileTree(dir: 'libs/meizu', include: ['*.aar'])
-```
 
 //以下第三方库为 SDK 内部引用，即使您的应用没有用到，也必须声明在此；
 //相反，如果您的应用已经在使用，则可保留您自己的版本，不必再次声明
