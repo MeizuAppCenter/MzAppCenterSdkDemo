@@ -150,12 +150,12 @@ override fun onFailed(code: Int, message: String) {
 
 | code | message | 建议操作 |
 | ------ | ------ | ------ |
-| PayResult.CODE_ERROR_NETWORK_DISCONNECTED | 无法连接网络，请检查网络设置 | 引导用户检查网络设置 |
-| PayResult.CODE_ERROR_USER_CANCEL | 用户主动取消支付 | 引导用户重新发起支付 |
-| PayResult.CODE_ERROR_PREPAY_ORDER_ERROR | 获取预支付订单失败 | 检查是否已与魅族签约<br>检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查填写在魅族开放平台的`应用签名`是否由当前应用的签名生成<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
-| PayResult.CODE_ERROR_CHECK_SIGN_FAILED | 支付 SDK 检查订单签名失败 | 检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
-| PayResult.CODE_ERROR_READ_PHONE_STATE_NO_PERMISSION | 无法读取手机状态信息 | SDK 在处理支付请求时需要获取手机 IMEI 等信息，[引导用户授予][4] `android.permission.READ_PHONE_STATE` 权限|
-| 211XXX | 服务端透传的失败信息 | 查看[服务端文档](https://github.com/MeizuAppCenter/MzAppCenterSdkServerDemo#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E7%A0%81)或联系魅族技术支持 |
+| `PayResult.CODE_ERROR_NETWORK_DISCONNECTED` | 无法连接网络，请检查网络设置 | 引导用户检查网络设置 |
+| `PayResult.CODE_ERROR_USER_CANCEL` | 用户主动取消支付 | 引导用户重新发起支付 |
+| `PayResult.CODE_ERROR_PREPAY_ORDER_ERROR` | 获取预支付订单失败 | 检查是否已与魅族签约<br>检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查填写在魅族开放平台的`应用签名`是否由当前应用的签名生成<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
+| `PayResult.CODE_ERROR_CHECK_SIGN_FAILED` | 支付 SDK 检查订单签名失败 | 检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
+| `PayResult.CODE_ERROR_READ_PHONE_STATE_NO_PERMISSION` | 无法读取手机状态信息 | SDK 在处理支付请求时需要获取手机 IMEI 等信息，[引导用户授予](https://developer.android.com/training/permissions/requesting) `android.permission.READ_PHONE_STATE` 权限|
+| `211XXX` | 服务端透传的失败信息 | 查看[服务端文档](https://github.com/MeizuAppCenter/MzAppCenterSdkServerDemo#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E7%A0%81)或联系魅族技术支持 |
 
 **注意：`onSuccess()` 只代表用户本地支付成功，后台需要处理以及最终确认状态。因此您不应该在这个回调里做任何的发货操作，因为这不完全可靠。请务必以魅族服务器回调您的支付通知 URL为准，来认为用户最终支付成功。详见上方的时序图。**
 
