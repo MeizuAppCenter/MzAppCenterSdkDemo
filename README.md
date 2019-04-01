@@ -184,11 +184,11 @@ override fun onFailed(code: Int, message: String) {
 
     检查 `AndroidManifestx.xml` 的 `Applicaiton`节点，确保声明了 `android:theme="@style/AppTheme"`,并且 `AppTheme` 继承自 `Theme.Appcompat`，比如 `<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">`。可以通过新建一个全新的 AS 工程，或者参考[官方文档](https://developer.android.com/guide/topics/ui/look-and-feel/themes#Theme)来规范您的工程结构。
   
-  * 方法二（侵入式，不推荐）
-    1. 打开您 `app` 模块的 `res/values/styles.xml`，添加如下声明：
-
-    ```xml
-
+魅族服务器校验了
+魅族服务器校验了`，添加如下声明：
+魅族服务器校验了
+魅族服务器校验了
+魅族服务器校验了
         <style name="Theme.AppCompat.Translucent">
             <item name="android:windowNoTitle">true</item>
             <item name="android:windowBackground">@android:color/transparent</item>
@@ -242,6 +242,15 @@ override fun onFailed(code: Int, message: String) {
 * 老的订单重试支付一直失败
 
   * 您在我们订单体系内的`预付单`可能过期了。请尝试重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法，同时请在自身订单系统内建立好对应关系方便后期对账。关于`预付单`的解释请参见上方时序图。
+
+
+* 我的商品有优惠活动，价格应该怎么传？
+
+  * 对于 `PayInfo` 的三个参数，魅族做了价格校验，即必须满足：
+    > `buyAmount * perPrice = totalFee`
+    
+    因此如果您的商品有优惠活动，建议把优惠后的实际仍需扣款价格作为 `perPrice` 传入，同时请在自身订单系统内建立好对应关系方便后期对账，此时联运 SDK 仅作为收银台角色处理。
+
 
 
   [1]: https://github.com/MeizuAppCenter/MzAppCenterSdkDemo/releases
