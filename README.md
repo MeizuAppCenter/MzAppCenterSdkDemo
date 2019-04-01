@@ -11,7 +11,7 @@
 
 1.在接入前，您需要按照[《应用联运服务接入指南》](http://open-wiki.flyme.cn/doc-wiki/index#id?119)完成`新建联运版本`的工作。
 
-2.在`新建联运版本`时，您需要提供您应用**最终上架的生产环境版本**的签名信息，请访问[《应用联运SDK接入说明》](http://open-wiki.flyme.cn/doc-wiki/index#id?118)，使用文档中提到的 `MzSignfetcher` 工具获取它。
+2.在`新建联运版本`时，您需要提供您应用**最终上架的生产环境版本**的签名信息，请访问[《应用联运SDK接入说明》][2]，使用文档中提到的 `MzSignfetcher` 工具获取它。
 
 # 技术准备
 
@@ -132,8 +132,8 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
 | productBody | String | 是 | 商品详情 | "productBody" |
 | productUnit | String | 是 | 商品单位 | "份" |
 | buyAmount | Integer | 是 | 购买数量 | 1 |
-| perPrice | Double | 是 | 商品单价 | 0.01 |
-| totalFee | Double | 是 | 购买总价 | 0.01 |
+| perPrice | Double | 是 | 商品单价，单位 `元` | 0.01 |
+| totalFee | Double | 是 | 购买总价，单位 `元` | 0.01 |
 | attach | String | 否 | CP自定义信息 | "" |
 
 `IPayResultListener` 为支付结果回调，具体说明如下：
@@ -155,7 +155,8 @@ override fun onFailed(code: Int, message: String) {
 | `PayResult.CODE_ERROR_PREPAY_ORDER_ERROR` | 获取预支付订单失败 | 检查是否已与魅族签约<br>检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查填写在魅族开放平台的`应用签名`是否由当前应用的签名生成<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
 | `PayResult.CODE_ERROR_CHECK_SIGN_FAILED` | 支付 SDK 检查订单签名失败 | 检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
 | `PayResult.CODE_ERROR_READ_PHONE_STATE_NO_PERMISSION` | 无法读取手机状态信息 | SDK 在处理支付请求时需要获取手机 IMEI 等信息，[引导用户授予](https://developer.android.com/training/permissions/requesting) `android.permission.READ_PHONE_STATE` 权限|
-| `211XXX` | 服务端透传的失败信息 | 查看[服务端文档](https://github.com/MeizuAppCenter/MzAppCenterSdkServerDemo#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E7%A0%81)或联系魅族技术支持 |
+| `211013` | 应用签名校验失败 | 确保开发者后台联运参数里填写的应用签名是用 [MzSignfetcher][2] 获取的<br>检查当前应用的签名，与开发者后台预留的签名是否一致<br>检查是不是在后台预留了正式环境的签名，而调用时却使用了 [debug.keystore](https://developer.android.com/studio/publish/app-signing#debug-mode)|
+| 其它 `211XXX` | 服务端透传的失败信息 | 查看[服务端文档](https://github.com/MeizuAppCenter/MzAppCenterSdkServerDemo#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E7%A0%81)或联系魅族技术支持 |
 
 **注意：`onSuccess()` 只代表用户本地支付成功，后台需要处理以及最终确认状态。因此您不应该在这个回调里做任何的发货操作，因为这不完全可靠。请务必以魅族服务器回调您的支付通知 URL为准，来认为用户最终支付成功。详见上方的时序图。**
 
@@ -244,4 +245,5 @@ override fun onFailed(code: Int, message: String) {
 
 
   [1]: https://github.com/MeizuAppCenter/MzAppCenterSdkDemo/releases
+  [2]: http://open-wiki.flyme.cn/doc-wiki/index#id?118
   
