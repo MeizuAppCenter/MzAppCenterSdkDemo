@@ -184,11 +184,9 @@ override fun onFailed(code: Int, message: String) {
 
     检查 `AndroidManifestx.xml` 的 `Applicaiton`节点，确保声明了 `android:theme="@style/AppTheme"`,并且 `AppTheme` 继承自 `Theme.Appcompat`，比如 `<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">`。可以通过新建一个全新的 AS 工程，或者参考[官方文档](https://developer.android.com/guide/topics/ui/look-and-feel/themes#Theme)来规范您的工程结构。
   
-魅族服务器校验了
-魅族服务器校验了`，添加如下声明：
-魅族服务器校验了
-魅族服务器校验了
-魅族服务器校验了
+  * 方法二（侵入式，不推荐）
+    1. 打开您 `app` 模块的 `res/values/styles.xml`，添加如下声明：
+    ```xml
         <style name="Theme.AppCompat.Translucent">
             <item name="android:windowNoTitle">true</item>
             <item name="android:windowBackground">@android:color/transparent</item>
