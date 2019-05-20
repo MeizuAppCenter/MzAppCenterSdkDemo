@@ -60,7 +60,7 @@ repositories {
 def meizuLibs = project.file('libs/meizu')
 meizuLibs.traverse(nameFilter: ~/.*\.aar/) { file ->
     def name = file.getName().replace('.aar', '')
-    releaseImplementation(name: name, ext: 'aar')
+    implementation(name: name, ext: 'aar')
 }
 
 // 或者，以上也可以简写成下面这句，但老版本的 Android Gradle Plugin 可能无法识别，请按需启用
