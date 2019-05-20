@@ -55,13 +55,22 @@ repositories {
 ```
 接着在 `dependencies{}` 闭包内添加如下声明：
 ``` groovy
-implementation fileTree(dir: 'libs/meizu', include: ['*.aar'])
+
+// 遍历 'libs/meizu' 下的所有 `aar` 并引用
+def meizuLibs = project.file('libs/meizu')
+meizuLibs.traverse(nameFilter: ~/.*\.aar/) { file ->
+    def name = file.getName().replace('.aar', '')
+    releaseImplementation(name: name, ext: 'aar')
+}
+
+// 或者，以上也可以简写成下面这句，但老版本的 Android Gradle Plugin 可能无法识别，请按需启用
+// implementation fileTree(dir: 'libs/meizu', include: ['*.aar'])
 
 //以下第三方库为 SDK 内部引用，即使您的应用没有用到，也必须声明在此；
 //相反，如果您的应用已经在使用，则可保留您自己的版本，不必再次声明
 implementation "com.android.support:appcompat-v7:25.3.1"
 implementation "com.google.code.gson:gson:2.5"
-implementation "com.squareup.picasso:picasso:2.5.2"
+implementation "com.squareup.picasso:picasso:2.71828"
 implementation "com.squareup.retrofit2:retrofit:2.4.0"
 implementation "com.squareup.retrofit2:converter-gson:2.4.0"
 ```
