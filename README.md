@@ -203,7 +203,7 @@ override fun onFailed(code: Int, message: String) {
             <item name="android:windowIsTranslucent">true</item>
             <item name="android:windowAnimationStyle">@android:style/Animation</item>
             <item name="android:windowContentOverlay">@null</item>
-            <item name="android:windowTranslucentStatus"</item>
+            <item name="android:windowTranslucentStatus">true</item>
             <item name="android:actionBarStyle">@null</item>
             <item name="android:backgroundDimEnabled">true</item>
             <item name="android:backgroundDimAmount">0.6</item>
