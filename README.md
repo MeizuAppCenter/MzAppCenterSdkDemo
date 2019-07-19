@@ -261,7 +261,13 @@ override fun onFailed(code: Int, message: String) {
 * 我的项目因为历史原因，`Android Gradle Plugin` 只能用 `2.3.X` 版本，`Kotlin` 插件要怎么接？
 
   * 请[参考这里](https://github.com/general-mobile/kotlin-architecture-components-notes-demo/blob/master/build.gradle)配置 `build.gradle`
+  
+* 用户支付完成后我该怎样查询订单最终状态？
 
+  * 方法一
+    客户端起一个轮询，每间隔数秒向服务端查询订单状态，确认最终成功后，执行发货操作，超时时间应当控制在 30s 以内。因为涉及钱财交易，超时后可以先报“支付成功，待确认”，不给用户造成心理负担，后续用户再次打开 app 或者查看订单的时候，再次查询订单状态并进行后续操作。
+  * 方法二
+    与客户端的 Push 结合，服务端收到支付状态更新后，给客户端 Push 一下，但要__注意验证 Push 的来源与真实性__。
 
 
   [1]: https://github.com/MeizuAppCenter/MzAppCenterSdkDemo/releases
