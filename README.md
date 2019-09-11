@@ -167,6 +167,7 @@ override fun onFailed(code: Int, message: String) {
 | `PayResult.CODE_ERROR_CHECK_SIGN_FAILED` | 支付 SDK 检查订单签名失败 | 检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
 | `PayResult.CODE_ERROR_READ_PHONE_STATE_NO_PERMISSION` | 无法读取手机状态信息 | SDK 在处理支付请求时需要获取手机 IMEI 等信息，[引导用户授予](https://developer.android.com/training/permissions/requesting) `android.permission.READ_PHONE_STATE` 权限|
 | `211013` | 应用签名校验失败(应用上线后不应遇到) | 开发者后台联运参数里填写的应用签名必须用 [MzSignfetcher][2] 获取，不接受其他任何随意填写的签名串<br>检查当前应用的签名，与开发者后台预留的签名是否一致<br>检查是不是在后台预留了正式环境的签名，而调用时却使用了 [debug.keystore](https://developer.android.com/studio/publish/app-signing#debug-mode)|
+| `20003` | 支付信息验签不通过 | SDK 不支持`在 A 设备生成订单，B设备付款`，如果存在这种场景，请生成一个新的订单，在构造`PayInfo`时 传给`tradeNo` |
 | 其它 `211XXX` | 服务端透传的失败信息 | 查看[服务端文档](https://github.com/MeizuAppCenter/MzAppCenterSdkServerDemo#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E7%A0%81)或联系魅族技术支持 |
 
 ## ProGuard
