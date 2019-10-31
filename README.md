@@ -41,7 +41,6 @@
  - IndPayProcess-release-X.X.X.aar
  - meizu-common-X.X.XXXXXX.aar
  - MzAppCenterSdk_X.X.X(Build_X.X.X).aar
- - MzUsageStats-X.X.X.aar
  - res-meizu-common-X.X.XXXXXX.aar
 
 2.打开 `app` 的 `build.gradle`，在根节点声明：
