@@ -243,7 +243,7 @@ override fun onFailed(code: Int, message: String) {
 
 * 运行时界面显示为英文
 
-  * 解决方法：检查您 `app` 模块的 `build.gradle`，移除 `resConfigs` 相关的配置。
+  * 解决方法：检查您 `app` 模块 `build.gradle` 中 `resConfigs` 相关的配置，如果您配置了中文相关的资源，请确保它们为 `zh-rCN`、`zh-rHK`、`zh-rTW`（区分大小写）中的一个或多个，而不应该仅仅是 `cn`或者 `CN`，这是错误的。
 
 * `Payinfo` 的 `totalFee` 已经变了，拉起的收银台显示价格却还是原来的
 
