@@ -169,7 +169,7 @@ override fun onFailed(code: Int, message: String) {
 | `PayResult.CODE_ERROR_CHECK_SIGN_FAILED` | 支付 SDK 检查订单签名失败 | 检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
 | `PayResult.CODE_ERROR_READ_PHONE_STATE_NO_PERMISSION` | 无法读取手机状态信息 | SDK 在处理支付请求时需要获取手机 IMEI 等信息，[引导用户授予](https://developer.android.com/training/permissions/requesting) `android.permission.READ_PHONE_STATE` 权限|
 | `211013` | 应用签名校验失败(应用上线后不应遇到) | 开发者后台联运参数里填写的应用签名必须用 [MzSignfetcher][2] 获取，不接受其他任何随意填写的签名串<br>检查当前应用的签名，与开发者后台预留的签名是否一致<br>检查是不是在后台预留了正式环境的签名，而调用时却使用了 [debug.keystore](https://developer.android.com/studio/publish/app-signing#debug-mode)|
-| `20003` | 支付信息验签不通过 | SDK 不支持`在 A 设备生成订单，B设备付款`，如果存在这种场景，请生成一个新的订单，在构造`PayInfo`时 传给`tradeNo` |
+| `20003` 或 `100` | 支付信息验签不通过 | 1. SDK __不支持__` A 设备生成订单，B设备付款`，如果存在这种场景，请在同一台手机上生成新的订单，在构造`PayInfo`时 传给`tradeNo`。<br> 2. 检查手机本身的网络连接是否存在代理，或者连接的 WiFi 是否存在代理？SDK 不信任非 CA 颁发的证书 |
 | 其它 `211XXX` | 服务端透传的失败信息 | 查看[服务端文档](https://github.com/MeizuAppCenter/MzAppCenterSdkServerDemo#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E7%A0%81)或联系魅族技术支持 |
 
 ## ProGuard
@@ -190,13 +190,9 @@ override fun onFailed(code: Int, message: String) {
   * 解决方法：请不要在 Android 8.0 版本运行此程序。
 
 
-* 运行报错 `IndPayActivity crash, you need to use a theme.appcompat theme (or descendant) with this activity. material`
+* 运行报错 `IndPayActivity crash, you need to use a theme.appcompat theme (or descendant) with this activity... material`
 
-  * 方法一（推荐）
-
-    检查 `AndroidManifestx.xml` 的 `Applicaiton`节点，确保声明了 `android:theme="@style/AppTheme"`,并且 `AppTheme` 继承自 `Theme.Appcompat`，比如 `<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">`。可以通过新建一个全新的 AS 工程，或者参考[官方文档](https://developer.android.com/guide/topics/ui/look-and-feel/themes#Theme)来规范您的工程结构。
-  
-  * 方法二（侵入式，不推荐）
+  * 解决方法：
     1. 打开您 `app` 模块的 `res/values/styles.xml`，添加如下声明：
     ```xml
         <style name="Theme.AppCompat.Translucent">
@@ -224,9 +220,9 @@ override fun onFailed(code: Int, message: String) {
 
 * 编译时提示 `utdid` 库冲突
 
-  * 请使用 [MzAppCenterSdk_1.0.3][1] 以上版本，该版本已经集成了 [剥离UTDID的支付宝SDK](https://alipay.open.taobao.com/doc2/detail.htm?treeId=54&articleId=104509&docType=1)
-
-  * 如果升级了最新版本的 SDK 仍不生效，请检查您的项目是否引用了`友盟统计 SDK` ？请删除其中的 `utdid4all-X.X.X.jar`。参考：https://developer.umeng.com/docs/66632/detail/67131
+  * 解决方法：检查您的项目是否引用了`友盟统计 SDK` ？请删除其中的 `utdid4all-X.X.X.jar`。
+    
+    参考：https://developer.umeng.com/docs/66632/detail/67131
 
 * 引用了 `android-aspectjx` 导致支付宝闪退，提示 `java.lang.NoClassDefFoundError:Failed resolution of: Lcom/alipay/sdk/app/PayTask`
   * 解决方法：请参考如下方法将 `支付宝 SDK` 加入 `aspectjx` 的白名单：
@@ -243,7 +239,7 @@ override fun onFailed(code: Int, message: String) {
 
 * 运行时界面显示为英文
 
-  * 解决方法：检查您 `app` 模块 `build.gradle` 中 `resConfigs` 相关的配置，如果您配置了中文相关的资源，请确保它们为 `zh-rCN`、`zh-rHK`、`zh-rTW`（区分大小写）中的一个或多个，而不应该仅仅是 `cn`或者 `CN`，这是错误的。
+  * 解决方法：检查您 `app` 模块 `build.gradle` 中 `resConfigs` 相关的配置，如果您配置了中文相关的资源，请确保它们为 `zh-rCN`、`zh-rHK`、`zh-rTW`（区分大小写）中的一个或多个，而不是 `cn` 或者 `CN`，这是错误的。
 
 * `Payinfo` 的 `totalFee` 已经变了，拉起的收银台显示价格却还是原来的
 
