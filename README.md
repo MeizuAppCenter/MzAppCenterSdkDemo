@@ -25,7 +25,7 @@
 
 # 关于 API 29
 
-为了确保支付安全，联运 SDK 目前依赖了 `android.Manifest.permission.READ_PHONE_STATE` 权限来生成设备安全指纹，用作唯一性校验。但从 API 29 开始，Google 严格控制了此权限的使用。我们已经开始新方案的改版工作，此项工作预计会在 2019 年底完成。在此之前，__请不要将您应用的 `targetSdkVersion` 设置成 `29`__。
+为了确保支付安全，联运 SDK 目前依赖了 `android.Manifest.permission.READ_PHONE_STATE` 权限来生成设备安全指纹，用作唯一性校验。但从 API 29 开始，Google 严格控制了此权限的使用。我们已经开始新方案的改版工作，此项工作预计会在 2020 年第一季度完成。在此之前，__请不要将您应用的 `targetSdkVersion` 设置成 `29`__。
 
 # 时序图
 
