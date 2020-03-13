@@ -91,7 +91,7 @@ class DemoApplication : Application() {
 | 参数名 | 类型 | 是否必填 | 说明 |
 | ------ | ------ | ------ | ------ |
 | application | Application | 是 | 应用的 Application |
-| appKey | String | 是 | 您在魅族开放平台[签约](http://open-wiki.flyme.cn/doc-wiki/index#id?119)完成后，魅族提供给您的一串值 |
+| appKey | String | 是 | 您在魅族开放平台[签约](http://open-wiki.flyme.cn/doc-wiki/index#id?119)完成后，在`联运参数`页面，位于`APPPKEY`后的一串值 |
 | debug | Boolean | 否 | SDK 内部 Log 开关，建议传 `<您的应用包名>.BuildConfig.Debug` |
 
 4.调用接口发起支付请求：
