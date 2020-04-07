@@ -1,11 +1,8 @@
 # MzAppCenterSdkDemo
+
+| [迁移到 魅族联运 SDK 2.0](README_MIGRATE.md) | [旧版魅族联运 SDK](README_OLD.md) |
+
 魅族联运 SDK 接入 Demo。演示了如何初始化 SDK 与发起支付请求。
-
-特别注意：
-
- 1. 如您在开发调试阶段使用非魅族手机，并且系统版本为 Android O，请确保其版本为 Android 8.1，Demo 暂不支持在 Android 8.0 运行。
- 2. **Demo 中的 libs 不会随时保持更新，请不要直接拷贝使用！请不要直接拷贝使用！请不要直接拷贝使用！**
-    请转至 [Release][1] 下载最新版本的 SDK。
 
 # 环境准备
 
@@ -15,17 +12,11 @@
 
 # 技术准备
 
-1.魅族应用中心联运 SDK 目前只适用于 `Android Studio` 工程结构的项目。
+1.魅族应用中心联运 SDK 只适用于 `Android Studio` 工程结构的项目。
 
-2.魅族应用中心联运 SDK 目前不要求登录魅族账号，亦不要求魅族手机。
+2.魅族应用中心联运 SDK 要求使用魅族手机，并在支付前登录 [Flyme 账户](https://login.flyme.cn/)
 
 3.您的项目需要[添加 Kotlin 支持](https://developer.android.com/studio/projects/add-kotlin)。过程非常简单，也可以使用 Andriod Studio -> Tools -> Kotlin -> Configure Kotlin in project，Android Studio 会自动帮助项目添加依赖插件。请放心，这不会影响现有项目以及 APK 大小，如果您还不熟悉 `Kotlin`，可以继续使用 `Java` 编写代码。但不管用何种语言开发，该插件必须添加以顺利通过编译。
-
-4.【重要】因为联运 SDK 自身已经包含了支付宝、微信、银联渠道的支付 SDK，如果您的项目之前单独接入了这些支付方式或其它类型的支付 SDK，请先将它们**移除以免编译时提示冲突**。
-
-# 关于 API 29
-
-为了确保支付安全，联运 SDK 目前依赖了 `android.Manifest.permission.READ_PHONE_STATE` 权限来生成设备安全指纹，用作唯一性校验。但从 API 29 开始，Google 严格控制了此权限的使用。我们已经开始新方案的改版工作，此项工作预计会在 2020 年第一季度完成。在此之前，__请不要将您应用的 `targetSdkVersion` 设置成 `29`__。
 
 # 时序图
 
@@ -39,12 +30,8 @@
 
 1.在项目 `app` 模块下新建 `libs/meizu` 目录，将下述文件拷贝至该目录，其中 `X` 以 [Release][1] 下载到的最新版本为准。
 
- - colortheme-crimson-X.X.XXXXXX.aar
- - flyme-appcompat-X.X.XXXXXX.aar
- - IndPayProcess-release-X.X.X.aar
- - meizu-common-X.X.XXXXXX.aar
+ - library-release.aar
  - MzAppCenterSdk_X.X.X(Build_X.X.X).aar
- - res-meizu-common-X.X.XXXXXX.aar
 
 2.打开 `app` 的 `build.gradle`，在根节点声明：
 
@@ -57,7 +44,6 @@ repositories {
 ```
 接着在 `dependencies{}` 闭包内添加如下声明：
 ``` groovy
-
 // 遍历 'libs/meizu' 下的所有 `aar` 并引用
 def meizuLibs = project.file('libs/meizu')
 meizuLibs.traverse(nameFilter: ~/.*\.aar/) { file ->
@@ -70,12 +56,12 @@ meizuLibs.traverse(nameFilter: ~/.*\.aar/) { file ->
 
 //以下第三方库为 SDK 内部引用，即使您的应用没有用到，也必须声明在此；
 //相反，如果您的应用已经在使用，则可保留您自己的版本，不必再次声明
-implementation "com.android.support:appcompat-v7:25.3.1"
-implementation "com.google.code.gson:gson:2.5"
-implementation "com.squareup.picasso:picasso:2.71828"
+implementation "com.android.support:appcompat-v7:28.0.0"
+implementation "com.google.code.gson:gson:2.8.2"
 implementation "com.squareup.retrofit2:retrofit:2.4.0"
 implementation "com.squareup.retrofit2:converter-gson:2.4.0"
 ```
+
 3.在应用的 `Application` 类中初始化 SDK:
 
 ``` kotlin
@@ -91,41 +77,82 @@ class DemoApplication : Application() {
 | 参数名 | 类型 | 是否必填 | 说明 |
 | ------ | ------ | ------ | ------ |
 | application | Application | 是 | 应用的 Application |
-| appKey | String | 是 | 您在魅族开放平台[签约](http://open-wiki.flyme.cn/doc-wiki/index#id?119)完成后，在`联运参数`页面，位于`APPPKEY`后的一串值 |
+| appKey | String | 是 | 您在魅族开放平台[签约](http://open-wiki.flyme.cn/doc-wiki/index#id?119)完成后，在`联运参数`页面，位于 `APPPKEY` 后的一串值，**不要弄错** |
 | debug | Boolean | 否 | SDK 内部 Log 开关，建议传 `<您的应用包名>.BuildConfig.Debug` |
 
-4.调用接口发起支付请求：
+4.调用接口先引导用户登录，已登录的用户会引导进行 `Oauth` 授权：
 ``` kotlin
-// Android 6.0 开始需要请求运行时权限
-// 请确保您的应用在调用支付接口前，已经拥有“android.Manifest.permission.READ_PHONE_STATE”权限
-if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.READ_PHONE_STATE)
-         == PackageManager.PERMISSION_GRANTED) {
-      //权限正常，调用 SDK 接口发起支付请求
-      MzAppCenterPlatform.getInstance()?.pay(activity, payInfo, listener)
-} else {
-     //如果没有权限，调用系统框架去请求用户授权
-     ActivityCompat.requestPermissions(this,
-     arrayOf(android.Manifest.permission.READ_PHONE_STATE), MY_PERMISSIONS_REQUEST_READ_PHONE_STATE)
-}
+private fun invokeSdkToLogin() {
+        MzAppCenterPlatform.getInstance()?.login(this, object : ILoginResultListener {
 
-//如果你在上面调用了 ActivityCompat.requestPermissions()，则需要重写此方法获得用户响应的结果
-override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
-                                        grantResults: IntArray) {
-    when (requestCode) {
-        MY_PERMISSIONS_REQUEST_READ_PHONE_STATE -> {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //太好了，用户终于授权了，调用 SDK 接口发起支付请求
-                MzAppCenterPlatform.getInstance()?.pay(activity, payInfo, listener)
-            } else {
-                //用户不授予“android.Manifest.permission.READ_PHONE_STATE”权限，无法完成支付
+            override fun onError(code: Int, message: String?) {
+                logMessage("× 登录失败，code = [$code], message = [$message]")
+                setAllBlanksEditable(true)
             }
-       else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-   }
-}
+
+            override fun onLoginSuccess() {
+                logMessage("√ 登录成功，已经获取到 token，开始下预付单")
+                invokeSdkToPay()
+            }
+
+        })
+    }
+```
+5.如果用户未登录，会拉起登录引导页，因此**必须在 `onActivityResult()` 调用下述方法**：
+
+```kotlin
+override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (MzAppCenterPlatform.getInstance()?.onActivityResult(requestCode, resultCode, data) == true) {
+            //用户成功登录，此时需要再次尝试获取 token
+            invokeSdkToLogin()
+        } else {
+            logMessage("× 用户不登录，此时无法完成支付")
+        }
+    }
+```
+6.在用户登录并且获取到 `token` 后，调用下述方法开始支付：
+```kotlin
+private fun invokeSdkToPay() {
+        MzAppCenterPlatform.getInstance()?.payV2(this, payInfo,
+                object : IPayResultListener {
+                    override fun onSuccess() {
+                        logMessage("√ 支付成功")
+                    }
+
+                    override fun onFailed(code: Int, message: String) {
+                        logMessage("× 支付失败，请根据 code 引导用户")
+                    }
+                })
+    }
 ```
 
-`MzAppCenterPlatform.getInstance()?.pay()` 方法的参数说明如下：
+# 接口文档
+## login
+| 参数名 | 类型 | 说明 |
+| ------ | ------ | ------ |
+| activity | Activity |调用支付接口的页面 |
+| payInfo | ILoginResultListener | 登录结果回调 |
 
+`ILoginResultListener` 为支付结果回调，具体说明如下：
+``` kotlin
+override fun onError(code: Int, message: String?) {
+                logMessage("× 登录失败，code = [$code], message = [$message]")
+}
+
+            override fun onLoginSuccess() {
+                logMessage("√ 登录成功，已经获取到 token，开始下预付单")
+}
+```
+| code | message | 建议操作 |
+| ------ | ------ | ------ |
+| `LoginResult.CODE_ERROR_LOGIN_INTENT` | 登录 Intent 为空，请联系魅族 | 检查手机是否卸载了” Flyme 账号“应用
+| `LoginResult.CODE_ERROR_LOGIN_GET_TOKEN_ERROR` | 获取 token 失败，请联系魅族 | 重启手机后重试
+
+## onActivityResult
+参照 上述文档即可，请务必 `override`！！！
+
+## payV2
 | 参数名 | 类型 | 说明 |
 | ------ | ------ | ------ |
 | activity | Activity |调用支付接口的页面 |
@@ -145,7 +172,8 @@ override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out
 | buyAmount | Integer | 是 | 购买数量 | 1 |
 | perPrice | Double | 是 | 商品单价，单位 `元` | 0.01 |
 | totalFee | Double | 是 | 购买总价，单位 `元` | 0.01 |
-| attach | String | 否 | CP自定义信息 | "" |
+| notifyUrl| String | 是 | 魅族服务器主动通知 CP 服务器里指定的页面 http/https 路径。建议商户使用 https | https://api.xx.com/receive_notify |
+| attach | String | 否 | CP自定义信息 | "attach" |
 
 `IPayResultListener` 为支付结果回调，具体说明如下：
 ``` kotlin
@@ -166,13 +194,11 @@ override fun onFailed(code: Int, message: String) {
 | `PayResult.CODE_ERROR_NETWORK_DISCONNECTED` | 无法连接网络，请检查网络设置 | 引导用户检查网络设置 |
 | `PayResult.CODE_ERROR_USER_CANCEL` | 用户主动取消支付 | 告知用户取消了支付，引导用户重新发起 |
 | `PayResult.CODE_ERROR_PREPAY_ORDER_ERROR` | 获取预支付订单失败 | 检查是否已与魅族签约<br>检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查填写在魅族开放平台的`应用签名`是否由当前应用的签名生成<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
-| `PayResult.CODE_ERROR_CHECK_SIGN_FAILED` | 支付 SDK 检查订单签名失败 | 检查 SDK 初始化时传入的 `appKey` 是否正确<br>检查 `PayInfo` 构造是否正确<br>查看是否混淆导致<br>查看编译时控制台输出信息是否有异常 |
-| `PayResult.CODE_ERROR_READ_PHONE_STATE_NO_PERMISSION` | 无法读取手机状态信息 | SDK 在处理支付请求时需要获取手机 IMEI 等信息，[引导用户授予](https://developer.android.com/training/permissions/requesting) `android.permission.READ_PHONE_STATE` 权限|
 | `211013` | 应用签名校验失败(应用上线后不应遇到) | 开发者后台联运参数里填写的应用签名必须用 [MzSignfetcher][2] 获取，不接受其他任何随意填写的签名串<br>检查当前应用的签名，与开发者后台预留的签名是否一致<br>检查是不是在后台预留了正式环境的签名，而调用时却使用了 [debug.keystore](https://developer.android.com/studio/publish/app-signing#debug-mode)|
 | `20003` 或 `100` | 支付信息验签不通过 | 1. SDK __不支持__` A 设备生成订单，B设备付款`，如果存在这种场景，请在同一台手机上生成新的订单，在构造`PayInfo`时 传给`tradeNo`。<br> 2. 检查手机本身的网络连接是否存在代理，或者连接的 WiFi 是否存在代理？SDK 不信任非 CA 颁发的证书 |
 | 其它 `211XXX` | 服务端透传的失败信息 | 查看[服务端文档](https://github.com/MeizuAppCenter/MzAppCenterSdkServerDemo#%E5%B8%B8%E8%A7%81%E9%94%99%E8%AF%AF%E7%A0%81)或联系魅族技术支持 |
 
-## ProGuard
+# ProGuard
 1.请先确保您的应用已经引用了 [Android SDK 默认的混淆规则](https://developer.android.com/studio/build/shrink-code#shrink-code)，这也是 Android 开发规范：
 ``` proguard
     proguardFiles getDefaultProguardFile('proguard-android.txt')
@@ -185,69 +211,13 @@ override fun onFailed(code: Int, message: String) {
 
   * 解决方法：请确保编译时添加了 `Kotlin` 插件。
 
-* 运行报错 `IndPayActivity crash，setOrientation() 方法报错`
-
-  * 解决方法：请不要在 Android 8.0 版本运行此程序。
-
-
-* 运行报错 `IndPayActivity crash, you need to use a theme.appcompat theme (or descendant) with this activity... material`
-
-  * 解决方法：
-    1. 打开您 `app` 模块的 `res/values/styles.xml`，添加如下声明：
-    ```xml
-        <style name="Theme.AppCompat.Translucent">
-            <item name="android:windowNoTitle">true</item>
-            <item name="android:windowBackground">@android:color/transparent</item>
-            <item name="android:colorBackgroundCacheHint">@null</item>
-            <item name="android:windowIsTranslucent">true</item>
-            <item name="android:windowAnimationStyle">@android:style/Animation</item>
-            <item name="android:windowContentOverlay">@null</item>
-            <item name="android:windowTranslucentStatus">true</item>
-            <item name="android:actionBarStyle">@null</item>
-            <item name="android:backgroundDimEnabled">true</item>
-            <item name="android:backgroundDimAmount">0.6</item>
-        </style>
-    ```
-
-    2. 打开您 app 模块的 `AndroidManifest.xml`，添加如下声明：
-
-    ```xml
-    <activity
-                android:name="com.meizu.flyme.indpay.process.pay.activity.IndPayActivity"
-                android:theme="@style/Theme.AppCompat.Translucent"
-                tools:replace="android:theme" />
-    ```
-
-* 编译时提示 `utdid` 库冲突
-
-  * 解决方法：检查您的项目是否引用了`友盟统计 SDK` ？请删除其中的 `utdid4all-X.X.X.jar`。
-    
-    参考：https://developer.umeng.com/docs/66632/detail/67131
-
-* 引用了 `android-aspectjx` 导致支付宝闪退，提示 `java.lang.NoClassDefFoundError:Failed resolution of: Lcom/alipay/sdk/app/PayTask`
-  * 解决方法：请参考如下方法将 `支付宝 SDK` 加入 `aspectjx` 的白名单：
-  
-    ``` groovy
-        aspectjx { exclude 'com.alipay' }
-    ```
-
-    参考：https://github.com/HujiangTechnology/gradle_plugin_android_aspectjx/issues/124
-
-* 编译时提示 `okhttp` 或 `okio` 等库冲突
-
-  * 解决方法：您的项目是否已经接入了`支付宝 SDK` 或有其它 SDK 引用了这些库？请使用 `gradle` 尝试 `exclude{}` 掉它们或移除。
-
-* 运行时界面显示为英文
-
-  * 解决方法：检查您 `app` 模块 `build.gradle` 中 `resConfigs` 相关的配置，如果您配置了中文相关的资源，请确保它们为 `zh-rCN`、`zh-rHK`、`zh-rTW`（区分大小写）中的一个或多个，而不是 `cn` 或者 `CN`，这是错误的。
-
 * `Payinfo` 的 `totalFee` 已经变了，拉起的收银台显示价格却还是原来的
 
-  * 解决方法：我们的订单体系，一旦`预付单`生成并且等待用户支付，价格是不允许再变化的。因此如果价格发生了变动，您需要重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法，同时请在自身订单系统内建立好对应关系方便后期对账。关于`预付单`的解释请参见上方时序图。
+  * 解决方法：我们的订单体系，一旦`预付单`生成并且等待用户支付，价格是不允许再变化的。因此如果价格发生了变动，您需要重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `payV2()` 方法，同时请在自身订单系统内建立好对应关系方便后期对账。关于`预付单`的解释请参见上方时序图。
 
 * 老的订单重试支付一直失败
 
-  * 您在我们订单体系内的`预付单`可能过期了。请尝试重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `pay()` 方法，同时请在自身订单系统内建立好对应关系方便后期对账。关于`预付单`的解释请参见上方时序图。
+  * 您在我们订单体系内的`预付单`可能过期了。请尝试重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `payV2()` 方法，同时请在自身订单系统内建立好对应关系方便后期对账。关于`预付单`的解释请参见上方时序图。
 
 
 * 我的商品有优惠活动，价格应该怎么传？
@@ -274,3 +244,7 @@ override fun onFailed(code: Int, message: String) {
   [1]: https://github.com/MeizuAppCenter/MzAppCenterSdkDemo/releases
   [2]: http://open-wiki.flyme.cn/doc-wiki/index#id?118
   
+  
+# 报告问题
+
+将 `MzAppCenterPlatform.init()` 第三个参数传 `true`，完整地重现一次问题，然后过滤 `MzAppCenterPlatform` 后，将 log 上报给魅族。
