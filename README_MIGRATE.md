@@ -1,4 +1,4 @@
-# 迁移到 魅族联运 SDK 2.0
+# 魅族联运 SDK 2.0 迁移指南
 
 本文主要描述了魅族联运 SDK 2.0 相对于 1.0 版本的变化，并介绍了如何从老版本迁移到新版本。
 
@@ -48,19 +48,19 @@ implementation "com.squareup.picasso:picasso:2.71828"
 
 ## 新增的 API
 
-API | 描述 |  
--|-|-
-`login(activity: Activity, listener: ILoginResultListener)` | 登录 Flyme 账号，并引导用户授权获取 `token` |
-`onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean  {` | 一个封装好的方法，用来配合 `login()` |
+API | 描述 |
+-|-|
+`login(activity: Activity, listener: ILoginResultListener)` | 登录 Flyme 账号，并引导用户授权获取 `token`
+`onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean  {` | 一个封装好的方法，用来配合 `login()`
 ## 修改的 API
 
-旧 API | 新 API |  描述 | 
--|-|-
+旧 API | 新 API |  描述 |
+-|-|-|
 `Payinfo(...)` |  `Payinfo(notifyUrl: String)` | `Payinfo` 现在强制要求传递 `notifyUrl`
 
 ## 移除的 API
 
-旧 API | 新 API |  
--|-|-
-`pay(activity: Activity, payInfo: PayInfo, listener: IPayResultListener)` | `payV2(activity: Activity, payInfo: PayInfo, listener: IPayResultListener)` |
+旧 API | 新 API |
+-|-|
+`pay(activity: Activity, payInfo: PayInfo, listener: IPayResultListener)` | `payV2(activity: Activity, payInfo: PayInfo, listener: IPayResultListener)`
 

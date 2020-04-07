@@ -1,6 +1,6 @@
 # MzAppCenterSdkDemo
 
-| [迁移到 魅族联运 SDK 2.0](README_MIGRATE.md) | [旧版魅族联运 SDK](README_OLD.md) |
+| [魅族联运 SDK 2.0 迁移指南](README_MIGRATE.md) | [旧版魅族联运 SDK](README_OLD.md) |
 
 魅族联运 SDK 接入 Demo。演示了如何初始化 SDK 与发起支付请求。
 
