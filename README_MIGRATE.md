@@ -4,11 +4,12 @@
 
 # 功能变更
 
-1. SDK 现在**仅支持**搭载了 [Flyme](https://www.flyme.cn/) 系统的魅族手机
-2. SDK 现在要求用户在支付前必须登录了 [Flyme 账户](https://login.flyme.cn/)
-3. SDK 体积大幅减小
-4. SDK 不再需要 `android.Manifest.permission.READ_PHONE_STATE` 等敏感权限
-5. SDK 不再支持银联支付渠道
+1. SDK 现在**仅支持**搭载 [Flyme](https://www.flyme.cn/) 系统的魅族手机，请使用魅族手机开发调试
+2. SDK 现在要求用户在支付前必须登录 [Flyme 账户](https://login.flyme.cn/)，否则无法完成支付
+3. SDK 新增了优惠券功能，具体使用方式请咨询魅族商务或者运营
+4. SDK 体积大幅减小
+5. SDK 不再需要 `android.Manifest.permission.READ_PHONE_STATE` 等敏感权限
+6. SDK 不再支持银联支付渠道
 
 # 迁移步骤
 
