@@ -51,7 +51,7 @@ implementation "com.squareup.picasso:picasso:2.71828"
 
 API | 描述 |
 -|-|
-`login(activity: Activity, listener: ILoginResultListener)` | 登录 Flyme 账号，并引导用户授权获取 `token`
+`login(requestCode: Int, activity: Activity, listener: ILoginResultListener)` | 登录 Flyme 账号，并引导用户授权获取 `token`
 `onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean  {` | 一个封装好的方法，用来配合 `login()`
 ## 修改的 API
 

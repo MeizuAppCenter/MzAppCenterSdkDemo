@@ -10,9 +10,11 @@ import com.meizu.mstore.sdk.pay.IPayResultListener
 import com.meizu.mstore.sdk.pay.PayInfo
 import com.meizu.mstore.sdk.pay.PayResult
 
-private const val MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1
-
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private const val ACTIVITY_REQUEST_CODE_AUTH = 2020
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +33,11 @@ class MainActivity : AppCompatActivity() {
             //用户成功授权，再次尝试获取 token
             invokeSdkToLogin()
         } else {
-            showToast("OAuth 授权失败，无法继续支付")
+            if (requestCode == ACTIVITY_REQUEST_CODE_AUTH) {
+                showToast("OAuth 授权失败，无法继续支付")
+            } else {
+                //应用自己其它的处理逻辑
+            }
         }
     }
 
@@ -60,15 +66,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun invokeSdkToLogin() {
-        MzAppCenterPlatform.getInstance()?.login(this, object : ILoginResultListener {
-            override fun onError(code: Int, message: String?) {
-                showToast("登录失败，code = [$code], message = [$message]")
-            }
+        MzAppCenterPlatform.getInstance()?.login(ACTIVITY_REQUEST_CODE_AUTH, this,
+                object : ILoginResultListener {
+                    override fun onError(code: Int, message: String?) {
+                        showToast("登录失败，code = [$code], message = [$message]")
+                    }
 
-            override fun onLoginSuccess() {
-                invokeSdkToPay()
-            }
-        })
+                    override fun onLoginSuccess() {
+                        invokeSdkToPay()
+                    }
+                })
     }
 
 }

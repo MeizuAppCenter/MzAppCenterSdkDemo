@@ -87,7 +87,6 @@ private fun invokeSdkToLogin() {
 
             override fun onError(code: Int, message: String?) {
                 logMessage("× 登录失败，code = [$code], message = [$message]")
-                setAllBlanksEditable(true)
             }
 
             override fun onLoginSuccess() {
@@ -104,10 +103,14 @@ private fun invokeSdkToLogin() {
 override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (MzAppCenterPlatform.getInstance()?.onActivityResult(requestCode, resultCode, data) == true) {
-            //用户成功登录，此时需要再次尝试获取 token
+            //用户成功授权，再次尝试获取 token
             invokeSdkToLogin()
         } else {
-            logMessage("× 用户不登录，此时无法完成支付")
+            if (requestCode == ACTIVITY_REQUEST_CODE_AUTH) { //ACTIVITY_REQUEST_CODE_AUTH 由应用调用 login() 时传入
+                showToast("OAuth 授权失败，无法继续支付")
+            } else {
+                //应用自己其它的处理逻辑
+            }
         }
     }
 ```
@@ -131,8 +134,9 @@ private fun invokeSdkToPay() {
 ## login
 | 参数名 | 类型 | 说明 |
 | ------ | ------ | ------ |
+| requestCode | Int |用来在 `onActivityResult()` 中区分此请求 |
 | activity | Activity |调用支付接口的页面 |
-| payInfo | ILoginResultListener | 登录结果回调 |
+| listener | ILoginResultListener | 登录结果回调 |
 
 `ILoginResultListener` 为支付结果回调，具体说明如下：
 ``` kotlin
@@ -150,7 +154,9 @@ override fun onError(code: Int, message: String?) {
 | `LoginResult.CODE_ERROR_LOGIN_GET_TOKEN_ERROR` | 获取 token 失败，请联系魅族 | 重启手机后重试
 
 ## onActivityResult
-参照 上述文档即可，请务必 `override`！！！
+参照上述文档即可，SDK 通过标准的 Oauth2 流程获取 token，详见 https://developer.android.com/training/id-auth/authenticate。
+
+**请务必重写此方法**，因为在支付时如果发现用户未登录 Flyme 账户，SDK 会拉起登录页，不重写此方法会导致 SDK 无法感知登录完成。
 
 ## payV2
 | 参数名 | 类型 | 说明 |

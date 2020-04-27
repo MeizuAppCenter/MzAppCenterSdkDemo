@@ -1,12 +1,8 @@
 package com.meizu.mstore.sdk.demo;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -20,7 +16,7 @@ import com.meizu.mstore.sdk.pay.PayResult;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 1;
+    private static final int ACTIVITY_REQUEST_CODE_AUTH = 2020;
 
     private void invokeSdkToPay() {
         PayInfo payInfo = new PayInfo(System.currentTimeMillis(), "tradeNo" + System.currentTimeMillis(),
@@ -48,18 +44,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void invokeSdkToLogin() {
-        MzAppCenterPlatform.getInstance().login(this, new ILoginResultListener() {
-            @Override
-            public void onError(int i, String s) {
-                Toast.makeText(MainActivity.this, "登录失败, code = [" + i
-                        + "], message = [" + s + "]", Toast.LENGTH_SHORT).show();
-            }
+        MzAppCenterPlatform.getInstance().login(ACTIVITY_REQUEST_CODE_AUTH, this,
+                new ILoginResultListener() {
+                    @Override
+                    public void onError(int i, String s) {
+                        Toast.makeText(MainActivity.this, "登录失败, code = [" + i
+                                + "], message = [" + s + "]", Toast.LENGTH_SHORT).show();
+                    }
 
-            @Override
-            public void onLoginSuccess() {
-                invokeSdkToPay();
-            }
-        });
+                    @Override
+                    public void onLoginSuccess() {
+                        invokeSdkToPay();
+                    }
+                });
     }
 
     @Override
@@ -85,7 +82,11 @@ public class MainActivity extends AppCompatActivity {
             //用户成功授权，再次尝试获取 token
             invokeSdkToLogin();
         } else {
-            Toast.makeText(MainActivity.this, "OAuth 授权失败，无法继续支付", Toast.LENGTH_SHORT).show();
+            if (requestCode == ACTIVITY_REQUEST_CODE_AUTH) {
+                Toast.makeText(MainActivity.this, "OAuth 授权失败，无法继续支付", Toast.LENGTH_SHORT).show();
+            } else {
+                //应用自己其它的处理逻辑
+            }
         }
     }
 }

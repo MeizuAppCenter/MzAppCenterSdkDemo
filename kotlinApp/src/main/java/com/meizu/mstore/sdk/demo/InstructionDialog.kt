@@ -13,12 +13,15 @@ class InstructionDialog : DialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return AlertDialog.Builder(activity)
-                .setMessage("Demo 仅演示发起支付请求的过程，但因为签名与 appKey 系伪造，" +
-                "结果肯定是 onFailed()，请在实际接入过程中替换成您真实的即可。")
-                .setPositiveButton(android.R.string.ok) { _, _ ->
-                    //do nothing
-                }.create()
+        activity?.let {
+            return AlertDialog.Builder(it)
+                    .setMessage("Demo 仅演示发起支付请求的过程，但因为签名与 appKey 系伪造，" +
+                            "结果肯定是 onFailed()，请在实际接入过程中替换成您真实的即可。")
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        //do nothing
+                    }.create()
+        }
+        return super.onCreateDialog(savedInstanceState)
     }
 
 }
