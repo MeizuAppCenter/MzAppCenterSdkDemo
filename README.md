@@ -83,7 +83,7 @@ class DemoApplication : Application() {
 4.调用接口先引导用户登录，已登录的用户会引导进行 `Oauth` 授权：
 ``` kotlin
 private fun invokeSdkToLogin() {
-        MzAppCenterPlatform.getInstance()?.login(this, object : ILoginResultListener {
+        MzAppCenterPlatform.getInstance()?.login(ACTIVITY_REQUEST_CODE_AUTH, this, object : ILoginResultListener {
 
             override fun onError(code: Int, message: String?) {
                 logMessage("× 登录失败，code = [$code], message = [$message]")
