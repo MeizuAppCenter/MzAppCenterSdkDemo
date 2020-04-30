@@ -22,6 +22,7 @@
  - IndPayProcess-release-2.1.9.aar
  - meizu-common-2.0.170614.aar
  - res-meizu-common-2.0.170614.aar
+ - MzUsageStats-3.2.0.aar
 
 2.如果您的应用没有用到下述依赖，请将其删除，因为不再需要
 
