@@ -130,6 +130,11 @@ private fun invokeSdkToPay() {
     }
 ```
 
+7.当页面退出，记得在 `onDestroyed()` 中调用此方法进行一些清理工作：
+```kotlin
+    MzAppCenterPlatform.getInstance()?.onDestroy()
+```
+
 # 接口文档
 ## login
 | 参数名 | 类型 | 说明 |
@@ -154,9 +159,9 @@ override fun onError(code: Int, message: String?) {
 | `LoginResult.CODE_ERROR_LOGIN_GET_TOKEN_ERROR` | 获取 token 失败，请联系魅族 | 重启手机后重试
 
 ## onActivityResult
-参照上述文档即可，SDK 通过标准的 Oauth2 流程获取 token，详见 https://developer.android.com/training/id-auth/authenticate。
+参照上述文档即可，SDK 通过标准的 Oauth2 流程获取 token，详见 https://developer.android.com/training/id-auth/authenticate 。
 
-**请务必重写此方法**，因为在支付时如果发现用户未登录 Flyme 账户，SDK 会拉起登录页，不重写此方法会导致 SDK 无法感知登录完成。
+**请务必重写此方法**，因为在支付时如果发现用户未登录 Flyme 账户，SDK 会拉起登录页，不重写此方法会导致 SDK [无法感知登录完成](https://developer.android.com/training/id-auth/authenticate#RequestAgain)。
 
 ## payV2
 | 参数名 | 类型 | 说明 |
@@ -242,9 +247,14 @@ override fun onFailed(code: Int, message: String) {
   * 方法一
   
     客户端起一个轮询，每间隔数秒向服务端查询订单状态，确认最终成功后，执行发货操作，超时时间应当控制在 30s 以内。因为涉及钱财交易，超时后可以先报“支付成功，待确认”，不给用户造成心理负担，后续用户再次打开 app 或者查看订单的时候，再次查询订单状态并进行后续操作。
+
   * 方法二
   
     与客户端的 Push 结合，服务端收到支付状态更新后，给客户端 Push 一下，但要**注意验证 Push 的来源与真实性**。
+
+  * 方法三
+  
+    做成让用户自己点击『我已完成支付』的形式，然后用户点击后，客户端去查询订单状态，再根据最终状态进行后续操作。
 
 
   [1]: https://github.com/MeizuAppCenter/MzAppCenterSdkDemo/releases

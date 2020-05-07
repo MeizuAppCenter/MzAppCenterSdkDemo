@@ -49,10 +49,11 @@ implementation "com.squareup.picasso:picasso:2.71828"
 
 ## 新增的 API
 
-API | 描述 |
--|-|
-`login(requestCode: Int, activity: Activity, listener: ILoginResultListener)` | 登录 Flyme 账号，并引导用户授权获取 `token`
-`onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean  {` | 一个封装好的方法，用来配合 `login()`
+API | 类型 | 描述 |
+ -|-|-|
+`login(requestCode: Int, activity: Activity, listener: ILoginResultListener)` | `Unit` | 登录 Flyme 账号，并引导用户授权获取 `token`
+`onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean` | `Boolean` | 一个封装好的方法，用来配合 `login()`。<br> `true` - SDK 成功处理请求 <br> `false` - SDK 未处理请求，请判断 `requestCode` 后处理
+`onDestroy()` | `Unit` | 用来释放一些 SDK 用到的资源
 ## 修改的 API
 
 旧 API | 新 API |  描述 |
