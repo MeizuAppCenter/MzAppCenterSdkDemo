@@ -130,7 +130,7 @@ private fun invokeSdkToPay() {
     }
 ```
 
-7.当页面退出，记得在 `onDestroyed()` 中调用此方法进行一些清理工作：
+7.当页面退出，记得在 `onDestroy()` 中调用此方法进行一些清理工作：
 ```kotlin
     MzAppCenterPlatform.getInstance()?.onDestroy()
 ```
