@@ -45,6 +45,7 @@ implementation "com.squareup.picasso:picasso:2.71828"
 2. 在正式支付之前，请务必调用 `MzAppCenterPlatform.getInstance()?.login()`进行 `OAuth` 授权，并确保在 `onActivityResult()` 中调用 `MzAppCenterPlatform.getInstance()?.onActivityResult(requestCode, resultCode, data)` 以获得正确的逻辑处理。
 3. `PayInfo` 在构造时，现在强制要求传递 `notifyUrl`。**请注意：不要把原来的 `attach` 传到 `notifyUrl`**
 4. 原先的`pay()`方法现更名为 `payV2()`，详见下方 API 对照。
+5. 新增 `onDestroy()` 方法，请在 `Activity` 或者 `Fragment` 的 `onDestroy()` 调用以释放资源。
 
 #  API 对照
 
