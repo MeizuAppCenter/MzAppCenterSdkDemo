@@ -218,6 +218,10 @@ override fun onFailed(code: Int, message: String) {
 
 # 常见问题
 
+* 有测试环境或测试地址吗？
+
+  * 我们目前没有提供测试环境，在开发时，可以通过传入`totalFee`传入 `0.01` ，即 1 分钱来进行。
+
 * 运行报错`java.lang.NoClassDefFoundError:Failed resolution of: Lkotlin/jvm/internal/Intrinsics`
 
   * 解决方法：请确保编译时添加了 `Kotlin` 插件。
@@ -231,7 +235,7 @@ override fun onFailed(code: Int, message: String) {
   * 您在我们订单体系内的`预付单`可能过期了。请尝试重新 new 一个 `Payinfo` 并将 `tradeNo` 传新的，再重新调用 `payV2()` 方法，同时请在自身订单系统内建立好对应关系方便后期对账。关于`预付单`的解释请参见上方时序图。
 
 
-* 我的商品有优惠活动，价格应该怎么传？
+* 我的商品自身有优惠活动，价格应该怎么传？
 
   * 对于 `PayInfo` 的三个参数，魅族做了价格校验，即必须满足：
     > `buyAmount * perPrice = totalFee`  //数量 * 单价 = 总价
