@@ -222,6 +222,26 @@ override fun onFailed(code: Int, message: String) {
 
   * 我们目前没有提供测试环境，在开发时，可以通过传入`totalFee`传入 `0.01` ，即 1 分钱来进行。
 
+* 为什么首次 Oauth 授权，回来页面之后没反应？`onActivityResult()` 好像没回调?
+
+  * 如果您在 `Fragment` 里调用 `MzAppCenterPlatform.getInstance()?.login()`，则有可能 `Activity` 的 `onActivityResult()` 无法分发到 `Fragment` 里来。请在您 `Fragment` 的宿主 `Activity` 中重写 `onActivityResult()`，并将事件手动分发到 `Fragment`：
+
+  ```kotlin
+  class MyActivity : AppCompatActivity() {
+
+      ...
+
+      override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        for (fragment in supportFragmentManager.fragments) {
+            //确保 `Fragment` 的 `onActivityResult()` 被回调
+            fragment.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+  }
+  
+  ```
+
 * 运行报错`java.lang.NoClassDefFoundError:Failed resolution of: Lkotlin/jvm/internal/Intrinsics`
 
   * 解决方法：请确保编译时添加了 `Kotlin` 插件。
