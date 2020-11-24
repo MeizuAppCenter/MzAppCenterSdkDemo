@@ -10,7 +10,7 @@
 
 3. 如果您现在接的是 2.0.0 版本，请额外再添加下面这些依赖：
 ``` groovy
-implementation "com.squareup.retrofit2:converter-gson:2.6.1
+implementation "com.squareup.retrofit2:converter-gson:2.6.1"
 implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.1"
 implementation "io.reactivex.rxjava2:rxjava:2.2.6"
 implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
@@ -25,7 +25,13 @@ implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
 > 今天是 2020 年 11 月 1 日，用户以 0.99 元钱开通了某某会员，可免费体验 3 天，之后 10 元 / 月。
 
-则 `totalFee` 是 `0.99`，`singleAmount` 是 `10.00`，`executeTime` 是 `2020-11-04`，`period` 是 `1`，`periodType` 是 `MONTH`。到了 `2020-11-04` 这天 24 小时内任意时间 CP 可发起扣款。超期未扣款或扣款失败，可以在下个周期到来前 3 天内（即 `2020-12-01` 至 `2020-12-03` ），执行补扣。__CP 服务端需重点关注这边的逻辑。__
+则 `totalFee` 是 `0.99`，`singleAmount` 是 `10.00`，`executeTime` 是 `2020-11-04`，`period` 是 `1`，`periodType` 是 `MONTH`。
+
+到了 `2020-11-04` 这天 24 小时内任意时间 CP 可发起扣款。
+
+超期未扣款或扣款失败，可以在下个周期到来前 3 天内（即 `2020-12-01` 至 `2020-12-03` ），执行补扣。
+
+__CP 服务端需重点关注这边的逻辑。__
 
 # 时序图
 
