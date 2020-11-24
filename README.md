@@ -1,8 +1,8 @@
 # MzAppCenterSdkDemo
 
-| [魅族联运 SDK 2.0 迁移指南](README_MIGRATE.md) | [旧版魅族联运 SDK](README_OLD.md) |
+| [魅族联运签约支付接入指南](README_2_1.md) | [魅族联运 SDK 2.0 迁移指南](README_MIGRATE.md) | [旧版魅族联运 SDK](README_OLD.md) |
 
-魅族联运 SDK 接入 Demo。演示了如何初始化 SDK 与发起支付请求。
+[Demo Apk 下载](static/demo-release(202011101546).apk)
 
 # 环境准备
 
@@ -57,9 +57,15 @@ meizuLibs.traverse(nameFilter: ~/.*\.aar/) { file ->
 //以下第三方库为 SDK 内部引用，即使您的应用没有用到，也必须声明在此；
 //相反，如果您的应用已经在使用，则可保留您自己的版本，不必再次声明
 implementation "com.android.support:appcompat-v7:28.0.0"
-implementation "com.google.code.gson:gson:2.8.2"
-implementation "com.squareup.retrofit2:retrofit:2.4.0"
+implementation "com.google.code.gson:gson:2.8.5"
+implementation "com.squareup.retrofit2:retrofit:2.6.1"
 implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+//以下库从 2.1.0 版本开始需要添加
+implementation "com.squareup.retrofit2:converter-gson:2.6.1"
+implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.1"
+implementation "io.reactivex.rxjava2:rxjava:2.2.6"
+implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+
 ```
 
 3.在应用的 `Application` 类中初始化 SDK:
@@ -174,17 +180,17 @@ override fun onError(code: Int, message: String?) {
 
 | 参数名 | 类型 | 是否必填 | 说明 | 示例参数 |
 | ------ | ------ | ------ | ------ |------ |
-| createTime | Long | 是 | cp订单创建时间 | System.currentTimeMillis() |
-| tradeNo | String | 是 | cp订单号 | "tradeNo" |
-| productId | String | 是 | 商品ID | "productId"|
-| productName | String | 是 | 商品名称 |  "productName" |
-| productBody | String | 是 | 商品详情 | "productBody" |
-| productUnit | String | 是 | 商品单位 | "份" |
-| buyAmount | Integer | 是 | 购买数量 | 1 |
-| perPrice | Double | 是 | 商品单价，单位 `元` | 0.01 |
-| totalFee | Double | 是 | 购买总价，单位 `元` | 0.01 |
-| notifyUrl| String | 是 | 魅族服务器主动通知 CP 服务器里指定的页面 http/https 路径。建议商户使用 https | https://api.xx.com/receive_notify |
-| attach | String | 否 | CP自定义信息 | "attach" |
+| createTime | Long | 是 | cp订单创建时间 | `System.currentTimeMillis()` |
+| tradeNo | String | 是 | cp订单号 | `"tradeNo"` |
+| productId | String | 是 | 商品ID | `"productId"` |
+| productName | String | 是 | 商品名称 |  `"productName"` |
+| productBody | String | 是 | 商品详情 | `"productBody"` |
+| productUnit | String | 是 | 商品单位 | `"份"` |
+| buyAmount | Integer | 是 | 购买数量 | `1` |
+| perPrice | Double | 是 | 商品单价，单位 `元` | `0.01` |
+| totalFee | Double | 是 | 购买总价，单位 `元` | `0.01` |
+| notifyUrl| String | 是 | 魅族服务器主动通知 CP 服务器里指定的页面 http/https 路径。建议商户使用 https | `"https://api.xx.com/receive_notify"` |
+| attach | String | 否 | CP自定义信息 | `"attach"` |
 
 `IPayResultListener` 为支付结果回调，具体说明如下：
 ``` kotlin
