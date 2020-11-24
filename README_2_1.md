@@ -66,7 +66,7 @@ private fun invokeSdkToPayAndSign() {
 | ------ | ------ | ------ |
 | `PayAndSignResult.CODE_ERROR_NETWORK_DISCONNECTED` | 无法连接网络，请检查网络设置 | 引导用户检查网络设置 |
 | `PayAndSignResult.CODE_ERROR_PAY_SUCCESS_BUT_BOOL_FAILED` | 用户不再签约 | 用户关闭了支付宝签约窗口，引导用户重新发起 |
-| 其它 Code |  见 message | 只会在开发阶段出现，联系魅族 |
+| 其它 code |  见 message | 只会在开发阶段出现，联系魅族 |
 
 7.在用户登录并且获取到 `token` 后，调用下述方法开始解约：
 

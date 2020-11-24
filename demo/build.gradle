@@ -1,0 +1,93 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+android {
+
+    /*signingConfigs {
+        mstore {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile rootProject.file("keystore/mstore_demo.jks")
+            storePassword keystoreProperties['storePassword']
+        }
+    }*/
+
+    compileSdkVersion 29
+
+    defaultConfig {
+        applicationId "com.meizu.mstore.sdk.demo"
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.mstore
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    if (variant.name == "debug") return
+                    def date = new Date()
+                    def formattedDate = date.format('YYYYMMddHHmm')
+                    outputFileName = "demo-${variant.name}($formattedDate).apk"
+                }
+            }
+        }
+        /*debug {
+            signingConfig signingConfigs.mstore
+        }*/
+    }
+
+}
+
+repositories {
+    flatDir {
+        dirs 'libs/meizu'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.50"
+
+    //demo only
+    implementation "com.android.support:appcompat-v7:28.0.0"
+    implementation "com.android.support:design:28.0.0"
+
+    //sdk needed start
+    def meizuLibs = project.file('libs/meizu')
+    meizuLibs.traverse(nameFilter: ~/.*\.aar/) { file ->
+        def name = file.getName().replace('.aar', '')
+        implementation(name: name, ext: 'aar')
+    }
+
+    //以下第三方库为 SDK 内部引用，即使您的应用没有用到，也必须声明在此；
+    //相反，如果您的应用已经在使用，则可保留您自己的版本，不必再次声明
+    implementation "com.google.code.gson:gson:2.8.5"
+    implementation "com.squareup.retrofit2:retrofit:2.6.1"
+    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+    //以下库从 2.1.0 版本开始需要添加
+    implementation "com.squareup.retrofit2:converter-gson:2.6.1"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.1"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.6"
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    //sdk needed end
+
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}

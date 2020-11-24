@@ -1,0 +1,12 @@
+<network-security-config>
+    <!-- 按需启用 -->
+    <base-config cleartextTrafficPermitted="true" />
+    <!-- debug 的包默认信任自安装的证书，方便测试抓包 -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" overridePins="true" />
+            <certificates src="user" overridePins="true" />
+        </trust-anchors>
+    </debug-overrides>
+
+</network-security-config>

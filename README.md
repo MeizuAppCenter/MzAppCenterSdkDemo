@@ -2,7 +2,17 @@
 
 | [魅族联运签约支付接入指南](README_2_1.md) | [魅族联运 SDK 2.0 迁移指南](README_MIGRATE.md) | [旧版魅族联运 SDK](README_OLD.md) |
 
-[Demo Apk 下载](static/demo-release(202011101546).apk)
+# Demo
+
+## 下载地址
+[下载 Demo](static/demo-release(202011101546).apk)
+
+## 编译方法
+
+1. 打开 `DemoApplication.kt`，将 `your_appKey` 替换成您申请到的值。
+2. 打开 `demo` 模块的 `build.gradle`，将 `applicationId` 替换成您的实际包名。
+3. 执行 `./gradlew clean assemRelea -p demo/` 编译出 demo 后进行签名，此签名需与您在我们平台预留的签名一致。
+4. 安装 Demo
 
 # 环境准备
 
@@ -16,7 +26,7 @@
 
 2.魅族应用中心联运 SDK 要求使用魅族手机，并在支付前登录 [Flyme 账户](https://login.flyme.cn/)
 
-3.您的项目需要[添加 Kotlin 支持](https://developer.android.com/studio/projects/add-kotlin)。过程非常简单，也可以使用 Andriod Studio -> Tools -> Kotlin -> Configure Kotlin in project，Android Studio 会自动帮助项目添加依赖插件。请放心，这不会影响现有项目以及 APK 大小，如果您还不熟悉 `Kotlin`，可以继续使用 `Java` 编写代码。但不管用何种语言开发，该插件必须添加以顺利通过编译。
+3.您的项目需要[添加 Kotlin 支持](https://developer.android.com/studio/projects/add-kotlin)。过程非常简单，也可以使用 Andriod Studio -> Tools -> Kotlin -> Configure Kotlin in project，Android Studio 会自动帮助项目添加依赖插件。如果您还不熟悉 `Kotlin`，可以继续使用 `Java` 编写代码。但不管用何种语言开发，该插件必须添加以顺利通过编译。
 
 # 时序图
 
@@ -24,7 +34,7 @@
 
 # 下载 SDK 与 视觉资源
 
-[下载地址][1]
+[下载 SDK][1]
 
 # 开始接入
 
