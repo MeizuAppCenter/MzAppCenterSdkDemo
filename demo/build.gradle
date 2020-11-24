@@ -78,7 +78,7 @@ dependencies {
     //相反，如果您的应用已经在使用，则可保留您自己的版本，不必再次声明
     implementation "com.google.code.gson:gson:2.8.5"
     implementation "com.squareup.retrofit2:retrofit:2.6.1"
-    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+    implementation "com.squareup.retrofit2:converter-gson:2.6.1"
     //以下库从 2.1.0 版本开始需要添加
     implementation "com.squareup.retrofit2:converter-gson:2.6.1"
     implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.1"

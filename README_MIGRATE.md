@@ -45,7 +45,7 @@ implementation "com.squareup.picasso:picasso:2.71828"
 
 3. 如果您需要接入 2.1.0 及以上的版本，请额外再添加下面这些依赖：
 ``` groovy
-implementation "com.squareup.retrofit2:converter-gson:2.6.1
+implementation "com.squareup.retrofit2:converter-gson:2.6.1"
 implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.1"
 implementation "io.reactivex.rxjava2:rxjava:2.2.6"
 implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
