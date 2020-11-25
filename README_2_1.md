@@ -31,7 +31,7 @@ implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
 超期未扣款或扣款失败，可以在下个周期到来前 3 天内（即 `2020-12-01` 至 `2020-12-03` ），执行补扣。
 
-__CP 服务端需重点关注这边的逻辑。__
+__CP 服务端需重点关注这边的逻辑，服务端文档可参考：https://github.com/MeizuAppCenter/MzAppCenterSdkServerDemo/blob/master/SDK3.0.md。__
 
 # 时序图
 

@@ -2,12 +2,9 @@
 
 | [魅族联运签约支付接入指南](README_2_1.md) | [魅族联运 SDK 2.0 迁移指南](README_MIGRATE.md) | [旧版魅族联运 SDK](README_OLD.md) |
 
-# Demo
+| [下载 Demo Apk](static/demo-release(202011101546).apk) |
 
-## 下载地址
-[下载 Demo](static/demo-release(202011101546).apk)
-
-## 编译方法
+# Demo 编译方法
 
 1. 打开 `DemoApplication.kt`，将 `your_appKey` 替换成您申请到的值。
 2. 打开 `demo` 模块的 `build.gradle`，将 `applicationId` 替换成您的实际包名。
